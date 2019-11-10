@@ -235,9 +235,9 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
 {
     NSAssert([_dataSource respondsToSelector:@selector(tabbarTitlesForTabbarView:)], @"'tabbarTitlesForTabbarView' Method must be implement");
     NSArray *array = [_dataSource tabbarTitlesForTabbarView:self];
-    if (!array.count) {
-        return ;
-    }
+//    if (!array.count) {
+//        return ;
+//    }
     NSMutableArray *mutaArray = [NSMutableArray array];
     _defaultFlag = 0;
     CGFloat allWidth = 0.0;

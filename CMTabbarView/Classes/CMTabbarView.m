@@ -249,7 +249,7 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
             [mutaArray addObject:item];
             if (_needAutoCenter) {
                 CGSize size = [str sizeWithAttributes:self.normalAttributes];
-                allWidth += size.width + CMTabbarViewDefaultPadding;
+                allWidth += size.width;// + CMTabbarViewDefaultPadding;
             }
         }
     }

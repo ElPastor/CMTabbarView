@@ -29,6 +29,7 @@ static NSUInteger const kCMDefaultSelected = 0;
     [self.view insertSubview:self.collectionView belowSubview:self.tabbarView];
     [self.view addSubview:self.tabbarView];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        self.datas = @[@"Objective-C",@"Swift",@"Ruby"];
         self.datas = @[@"Objective-C",@"Swift",@"Ruby",@"C++",@"JAVA",@"C",@"Apple",@"iPhone",@"iOS",@"Orange",@"Moyun",@"Penny",@"Module-Class-Class",@"Class",@"Class"];
         [self.collectionView reloadData];
         [self.tabbarView reloadData];
@@ -40,6 +41,7 @@ static NSUInteger const kCMDefaultSelected = 0;
 {
     if (!_tabbarView) {
         _tabbarView = [[CMTabbarView alloc] initWithFrame:CGRectMake(0, 20, self.view.bounds.size.width, 40)];
+        _tabbarView.needAutoCenter = NO;
         _tabbarView.delegate = self;
         _tabbarView.dataSource = self;
         _tabbarView.defaultSelectedIndex = kCMDefaultSelected;

@@ -14,6 +14,7 @@ CGFloat const CMTabbarViewDefaultPadding = 10.0f;
 CGFloat const CMTabbarSelectionBoxDefaultTop = 6.0f;
 CGFloat const CMTabbarViewDefaultAnimateTime = .2f;
 CGFloat const CMTabbarViewDefaultHorizontalInset = 7.5f;
+CGFloat const CMTabbarViewCloseButtonSize = 24.0f;
 NSString *  const CMTabIndicatorViewHeight = @"CMIndicatorViewHeight";
 NSString *  const CMTabIndicatorColor = @"CMIndicatorViewColor";
 NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
@@ -41,6 +42,14 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
 @property (nonatomic, copy, nullable) NSString *title;
 
 @property (strong, nonatomic) UILabel *titleLabel;
+
+@end
+
+@interface CMTabbarClosableCollectionViewCell : CMTabbarCollectionViewCell
+
+@property (strong, nonatomic, nullable) UIButton *closeButton;
+
+@property (nonatomic, copy) void (^closeHandler)(void);
 
 @end
 
@@ -156,7 +165,12 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
         layout.minimumInteritemSpacing = CMTabbarViewDefaultPadding;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-        [_collectionView registerClass:[CMTabbarCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([CMTabbarCollectionViewCell class])];
+        if (!self.hasCloseButton) {
+            [_collectionView registerClass:[CMTabbarCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([CMTabbarCollectionViewCell class])];
+        }
+        else {
+            [_collectionView registerClass:[CMTabbarClosableCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([CMTabbarClosableCollectionViewCell class])];
+        }
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
         _collectionView.showsHorizontalScrollIndicator = false;
@@ -187,7 +201,14 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CMTabbarCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([CMTabbarCollectionViewCell class]) forIndexPath:indexPath];
+    NSString* identifier;
+    if (!self.hasCloseButton) {
+        identifier = NSStringFromClass([CMTabbarCollectionViewCell class]);
+    }
+    else {
+        identifier = NSStringFromClass([CMTabbarClosableCollectionViewCell class]);
+    }
+    CMTabbarCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: identifier forIndexPath:indexPath];
     [self updateCellInterface:cell];
     CMTabbarItem *item = self.tabbarTitles[indexPath.row];
     cell.title = item.tabTitle;
@@ -204,7 +225,12 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
 {
     NSString *tabTitle = [self titleAtIndex:indexPath.row];
     CGSize size = [tabTitle sizeWithAttributes:self.normalAttributes];
-    return CGSizeMake(size.width+CMTabbarViewDefaultPadding, MIN(size.height+CMTabbarViewDefaultPadding, collectionView.bounds.size.height));
+    if (self.hasCloseButton) {
+        return CGSizeMake(size.width+CMTabbarViewDefaultPadding +  + CMTabbarViewCloseButtonSize, MIN(size.height+CMTabbarViewDefaultPadding, collectionView.bounds.size.height));
+    }
+    else {
+        return CGSizeMake(size.width+CMTabbarViewDefaultPadding, MIN(size.height+CMTabbarViewDefaultPadding, collectionView.bounds.size.height));
+    }
 }
 
 #pragma mark - UICollectionViewDeleagte
@@ -589,23 +615,28 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
 
 @implementation CMTabbarCollectionViewCell
 
+@synthesize titleLabel=_titleLabel;
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.titleLabel = [UILabel new];
-        self.titleLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:self.titleLabel];
-        
-        self.titleLabel.translatesAutoresizingMaskIntoConstraints = false;
-        NSDictionary *views = NSDictionaryOfVariableBindings(_titleLabel);
-        NSString *verticalConstraints = [NSString stringWithFormat:@"V:|-%f-[_titleLabel]-%f-|", .0,.0];
-        NSString *horizontalConstraints = [NSString stringWithFormat:@"H:|-%f-[_titleLabel]-%f-|",.0,.0];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:horizontalConstraints options:0 metrics:nil views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:verticalConstraints options:0 metrics:nil views:views]];
-        
+        [self initialize];
     }
     return self;
+}
+
+- (void) initialize {
+    self.titleLabel = [UILabel new];
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:self.titleLabel];
+    
+    self.titleLabel.translatesAutoresizingMaskIntoConstraints = false;
+    NSDictionary *views = NSDictionaryOfVariableBindings(_titleLabel);
+    NSString *verticalConstraints = [NSString stringWithFormat:@"V:|-%f-[_titleLabel]-%f-|", .0,.0];
+    NSString *horizontalConstraints = [NSString stringWithFormat:@"H:|-%f-[_titleLabel]-%f-|",.0,.0];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:horizontalConstraints options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:verticalConstraints options:0 metrics:nil views:views]];
 }
 
 - (void)prepareForReuse
@@ -640,3 +671,31 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
 
 @end
 
+@implementation CMTabbarClosableCollectionViewCell
+
+- (void) initialize {
+    self.titleLabel = [UILabel new];
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:self.titleLabel];
+    
+    self.titleLabel.translatesAutoresizingMaskIntoConstraints = false;
+    
+    self.closeButton = [[UIButton alloc] init];
+    [self.closeButton setImage: [UIImage imageNamed: @"close_icon" inBundle: [NSBundle bundleForClass: CMTabbarClosableCollectionViewCell.class] compatibleWithTraitCollection: nil] forState: UIControlStateNormal];
+    [self addSubview:self.closeButton];
+    [self.closeButton addTarget:self action: @selector(closeTapped) forControlEvents:UIControlEventTouchUpInside];
+    self.closeButton.translatesAutoresizingMaskIntoConstraints = false;
+
+    NSDictionary *views = @{@"titleLabel":self.titleLabel, @"closeButton":self.closeButton };
+
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-0-[closeButton(%f)]", CMTabbarViewCloseButtonSize] options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-0-[titleLabel]"] options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|-0-[titleLabel]-5-[closeButton(%f)]-0-|", CMTabbarViewCloseButtonSize] options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
+}
+
+- (void) closeTapped {
+    if (self.closeHandler)
+        self.closeHandler();
+}
+
+@end

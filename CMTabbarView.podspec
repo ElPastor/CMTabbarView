@@ -23,9 +23,9 @@ Pod::Spec.new do |s|
 
   s.source_files = 'CMTabbarView/Classes/**/*'
   
-  # s.resource_bundles = {
-  #   'CMTabbarView' => ['CMTabbarView/Assets/*.png']
-  # }
+  s.resource_bundles = {
+     'CMTabbarView' => ['CMTabbarView/Assets/*.png']
+   }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'

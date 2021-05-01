@@ -100,6 +100,9 @@ extern NSString *const CMTabBoxBackgroundColor;
 @property (assign, nonatomic) CGFloat tabbarOffsetX;
 
 @property (assign, nonatomic) BOOL needAutoCenter;
+
+@property (assign, nonatomic) BOOL hasCloseButton;
+
 /**
  Set the current selected tab
  

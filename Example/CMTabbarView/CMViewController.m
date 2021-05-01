@@ -41,6 +41,7 @@ static NSUInteger const kCMDefaultSelected = 0;
 {
     if (!_tabbarView) {
         _tabbarView = [[CMTabbarView alloc] initWithFrame:CGRectMake(0, 20, self.view.bounds.size.width, 40)];
+        _tabbarView.hasCloseButton = YES;
         _tabbarView.needAutoCenter = NO;
         _tabbarView.delegate = self;
         _tabbarView.dataSource = self;

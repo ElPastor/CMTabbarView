@@ -218,6 +218,11 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
         [self updateTabWithCurrentCell:cell nextCell:nil progress:1.0f backwards:true];
         [self updateIndicatorWithCell:cell indexPath:indexPath animate:false];
     }
+    if (self.hasCloseButton) {
+        ((CMTabbarClosableCollectionViewCell*)cell).closeHandler = ^{
+            [self.delegate tabbarView: self didCloseAtIndex: indexPath.item];
+        };
+    }
     return cell;
 }
 
@@ -677,6 +682,7 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
     self.titleLabel = [UILabel new];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self addSubview:self.titleLabel];
+    self.userInteractionEnabled = YES;
     
     self.titleLabel.translatesAutoresizingMaskIntoConstraints = false;
     

@@ -42,6 +42,7 @@ extern NSString *const CMTabBoxBackgroundColor;
 
 @optional
 - (void)tabbarView:(CMTabbarView *)tabbarView didSelectedAtIndex:(NSInteger)index;
+- (void)tabbarView:(CMTabbarView *)tabbarView didCloseAtIndex:(NSInteger)index;
 
 @end
 

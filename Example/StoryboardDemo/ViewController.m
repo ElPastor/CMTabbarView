@@ -64,6 +64,10 @@ static NSInteger const kDefaultSelectedIndex = 12;
     return self.datas;
 }
 
+- (BOOL)tabbarView:(CMTabbarView *)tabbarView canCloseAtIndex:(NSInteger)index {
+    return index != 0;
+}
+
 - (void)tabbarView:(CMTabbarView *)tabbarView didSelectedAtIndex:(NSInteger)index
 {
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:false];

@@ -165,12 +165,8 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
         layout.minimumInteritemSpacing = CMTabbarViewDefaultPadding;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-        if (!self.hasCloseButton) {
-            [_collectionView registerClass:[CMTabbarCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([CMTabbarCollectionViewCell class])];
-        }
-        else {
-            [_collectionView registerClass:[CMTabbarClosableCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([CMTabbarClosableCollectionViewCell class])];
-        }
+        [_collectionView registerClass:[CMTabbarCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([CMTabbarCollectionViewCell class])];
+        [_collectionView registerClass:[CMTabbarClosableCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([CMTabbarClosableCollectionViewCell class])];
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
         _collectionView.showsHorizontalScrollIndicator = false;
@@ -202,7 +198,8 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString* identifier;
-    if (!self.hasCloseButton) {
+    BOOL closable = self.hasCloseButton && [self.dataSource tabbarView: self canCloseAtIndex: indexPath.row];
+    if (!closable) {
         identifier = NSStringFromClass([CMTabbarCollectionViewCell class]);
     }
     else {
@@ -218,7 +215,7 @@ NSString *  const CMTabBoxBackgroundColor = @"CMBoxbackgroundColor";
         [self updateTabWithCurrentCell:cell nextCell:nil progress:1.0f backwards:true];
         [self updateIndicatorWithCell:cell indexPath:indexPath animate:false];
     }
-    if (self.hasCloseButton) {
+    if (closable) {
         ((CMTabbarClosableCollectionViewCell*)cell).closeHandler = ^{
             [self.delegate tabbarView: self didCloseAtIndex: indexPath.item];
         };

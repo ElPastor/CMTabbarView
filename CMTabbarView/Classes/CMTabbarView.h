@@ -35,6 +35,7 @@ extern NSString *const CMTabBoxBackgroundColor;
 @protocol CMTabbarViewDatasouce <NSObject>
 
 - (NSArray<NSString *> *)tabbarTitlesForTabbarView:(CMTabbarView *)tabbarView;
+- (BOOL)tabbarView:(CMTabbarView *)tabbarView canCloseAtIndex:(NSInteger)index;
 
 @end
 

@@ -810,7 +810,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CMTabbarView/CMTabbarView-Prefix.pch";
 				INFOPLIST_FILE = "CMTabbarView/CMTabbarView-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tuchaoshi.tabbarView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -831,7 +831,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CMTabbarView/CMTabbarView-Prefix.pch";
 				INFOPLIST_FILE = "CMTabbarView/CMTabbarView-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tuchaoshi.tabbarView;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   s.source_files = 'CMTabbarView/Classes/**/*'
   
   s.resource_bundles = {
-     'CMTabbarView' => ['CMTabbarView/Assets/*.png']
+     'CMTabbarView' => ['CMTabbarView/Assets/*.png', 'CMTabbarView/Assets/*.xcassets']
    }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
